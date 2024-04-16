@@ -22,7 +22,7 @@ import java.util.Map;
 @Slf4j
 public class UserServiceimpl implements UserService {
 
-    public static final String wx_LOGIN="https";
+    public static final String wx_LOGIN="https://api.weixin.qq.com/sns/jscode2session";
     @Autowired
     private WeChatProperties weChatProperties;
     @Autowired
@@ -30,10 +30,12 @@ public class UserServiceimpl implements UserService {
 
     @Override
     public User wxLogin(UserLoginDTO userLoginDTO) {
+//        看openid是否为空，是否真实微信登录，调用wx官网网址进行了验证
         String openid=getOpenid(userLoginDTO.getCode());
         if(openid==null){
             throw new LoginFailedException(MessageConstant.LOGIN_FAILED);
         }
+//        根据openid查询用户是否有注册到系统中，若没有则自动注册
         User user=userMapper.getByOpenid(openid);
         if(user==null){
             user=User.builder()
@@ -50,7 +52,7 @@ public class UserServiceimpl implements UserService {
         Map<String,String> map=new HashMap<>();
         map.put("appid",weChatProperties.getAppid());
         map.put("secret",weChatProperties.getSecret());
-        map.put("js_code",weChatProperties.getSecret());
+        map.put("js_code",code);
         map.put("grant_type","authorization_code");
         String json=HttpClientUtil.doGet(wx_LOGIN,map);
         JSONObject jsonObject= JSON.parseObject(json);

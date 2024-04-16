@@ -18,14 +18,15 @@ import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 
 @Aspect
-@Component
-@Slf4j
+@Component //这个注解表示这个类将会被Spring自动扫描并注册为一个Bean。
+@Slf4j //这个注解是Lombok库提供的，用于自动生成日志记录器（Logger）。
 public class AutoFillAspect {
+    //这个注解定义了一个切入点（Pointcut），表示匹配com.sky.mapper包下的所有方法，并且这些方法上标记了com.sky.annotation.AutoFill注解。
     @Pointcut("execution(* com.sky.mapper.*.*(..)) && @annotation(com.sky.annotation.AutoFill)")
     public void autoFillPointCut(){
 
     }
-    @Before("autoFillPointCut()")
+    @Before("autoFillPointCut()")  //这个注解表示在切入点方法执行前执行autoFill()方法。
     public void autoFill(JoinPoint joinPoint){
         log.info("开始进行公共字段的自动填充...");
 //        MethodSignature signature = (MethodSignature) joinPoint.getSignature();

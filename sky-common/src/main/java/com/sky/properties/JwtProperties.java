@@ -12,6 +12,7 @@ public class JwtProperties {
     /**
      * 管理端员工生成jwt令牌相关配置
      */
+//    分别为密钥，过期时间和用户名
     private String adminSecretKey;
     private long adminTtl;
     private String adminTokenName;
